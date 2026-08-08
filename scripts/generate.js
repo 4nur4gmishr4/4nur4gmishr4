@@ -381,31 +381,24 @@ async function main() {
 
     const hash = Date.now();
 
-    // Generate 3 separate 800x44 SVG files—one for each contact icon!
-    // Each SVG is 800px wide (viewBox="0 0 800 44"). Because width is 800px, GitHub scales ALL 3 SVGs
-    // 1:1 on mobile devices (Android & iPhone), keeping every icon PERFECTLY aligned at top right!
-    // And because each icon is its own 800px SVG file wrapped in a separate <a> link, 
-    // clicking each icon opens ONLY its respective platform in a new tab!
-    let iconHtmlList = [];
+    // Generate 3 individual 36x36 icon SVGs
+    // Using 36x36 medium size icons displayed inline next to each other inside a single 800px table cell
+    // This GUARANTEES all 3 icons sit on ONE single horizontal line on all laptops, iPhones, and Androids!
+    let iconLinks = [];
     DATA.contacts.forEach((c, idx) => {
       const pathData = getIconPath(c.slug);
       if (pathData) {
-        // Position at x=656, x=708, x=760 inside the 800px canvas!
-        // 34px icon size with 14px gap (medium perfectly balanced size for mobile & desktop)
-        const xOffset = 656 + (idx * (34 + 14));
-        const singleIconSvg = `<svg width="800" height="40" viewBox="0 0 800 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g transform="translate(${xOffset}, 0)">
-            <rect width="34" height="34" rx="9" fill="${colors.primary}" />
-            <g transform="translate(7, 7) scale(0.833)">
-              <path d="${pathData}" fill="#ffffff" transform="scale(1)" />
-            </g>
+        const singleIconSvg = `<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="36" height="36" rx="9" fill="${colors.primary}" />
+          <g transform="translate(8, 8) scale(0.833)">
+            <path d="${pathData}" fill="#ffffff" />
           </g>
         </svg>`;
         
         fs.writeFileSync(path.join(outDir, `icon-${c.slug}.svg`), singleIconSvg);
         
         const linkUrl = c.link.startsWith('mailto:') ? c.link : (c.link.startsWith('http') ? c.link : `https://${c.link}`);
-        iconHtmlList.push(`<a href="${linkUrl}" target="_blank" rel="noopener noreferrer"><img src="./assets/icon-${c.slug}.svg?v=${hash}" width="800" height="40" style="display: block; margin: 0; padding: 0;"></a>`);
+        iconLinks.push(`<a href="${linkUrl}" target="_blank" rel="noopener noreferrer"><img src="./assets/icon-${c.slug}.svg?v=${hash}" width="36" height="36" align="top"></a>`);
       }
     });
 
@@ -413,22 +406,16 @@ async function main() {
     const oldRow = path.join(outDir, 'contacts-row.svg');
     if (fs.existsSync(oldRow)) fs.unlinkSync(oldRow);
 
-    // Render in README inside a line-height:0 container so all 3 SVGs overlay seamlessly on top of each other!
-    const readmeContent = `<div align="left" style="line-height: 0; position: relative;">
-  <div style="display: flex; flex-direction: column; margin: 0; padding: 0; line-height: 0;">
-    <div style="position: relative; width: 800px; height: 40px;">
-      <div style="position: absolute; top: 0; left: 0; width: 800px; height: 40px;">
-        <a href="https://anuragsterminalbay.vercel.app/" target="_blank" rel="noopener noreferrer"><img src="./assets/icon-website.svg?v=${hash}" width="800" height="40"></a>
-      </div>
-      <div style="position: absolute; top: 0; left: 0; width: 800px; height: 40px;">
-        <a href="https://linkedin.com/in/4nur4gmishra" target="_blank" rel="noopener noreferrer"><img src="./assets/icon-linkedin.svg?v=${hash}" width="800" height="40"></a>
-      </div>
-      <div style="position: absolute; top: 0; left: 0; width: 800px; height: 40px;">
-        <a href="mailto:anuragmishrasnag06082004@gmail.com" target="_blank" rel="noopener noreferrer"><img src="./assets/icon-gmail.svg?v=${hash}" width="800" height="40"></a>
-      </div>
-    </div>
-  </div>
-  <img alt="Anurag Mishra Profile" src="./assets/profile-v2.svg?v=${hash}" width="800">
+    // Single horizontal row layout: 800px width container with icons right-aligned in ONE SINGLE line!
+    const readmeContent = `<div align="left">
+  <table width="800" border="0" cellspacing="0" cellpadding="0" style="width: 800px; max-width: 100%; border: none; border-collapse: collapse; margin: 0 0 8px 0; padding: 0;">
+    <tr style="border: none;">
+      <td align="right" valign="middle" style="border: none; padding: 0; white-space: nowrap;">
+        ${iconLinks.join('&nbsp;&nbsp;')}
+      </td>
+    </tr>
+  </table>
+  <img alt="Anurag Mishra Profile" src="./assets/profile-v2.svg?v=${hash}" width="800" style="max-width: 100%;">
 </div>`;
     
     fs.writeFileSync(path.join(__dirname, '..', 'README.md'), readmeContent);
