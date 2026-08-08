@@ -394,7 +394,8 @@ async function main() {
         </svg>`;
         
         fs.writeFileSync(path.join(outDir, `icon-${c.slug}.svg`), iconSvg);
-        iconLinks.push(`<a href="${c.link}" target="_blank" rel="noopener noreferrer"><img src="./assets/icon-${c.slug}.svg?v=${hash}" width="40" height="40"></a>`);
+        const linkUrl = c.link.startsWith('mailto:') ? c.link : (c.link.startsWith('http') ? c.link : `https://${c.link}`);
+        iconLinks.push(`<a href="${linkUrl}" target="_blank" rel="noopener noreferrer"><img src="./assets/icon-${c.slug}.svg?v=${hash}" width="40" height="40"></a>`);
       }
     });
 
@@ -402,9 +403,8 @@ async function main() {
     const oldRow = path.join(outDir, 'contacts-row.svg');
     if (fs.existsSync(oldRow)) fs.unlinkSync(oldRow);
 
-    // Responsive 800px HTML table with no borders that aligns individual clickable icons flush right!
     const readmeContent = `<div align="left">
-  <table width="800" style="width: 800px; border: none; border-collapse: collapse; margin: 0; padding: 0;">
+  <table width="800" border="0" cellspacing="0" cellpadding="0" style="width: 800px; border: none; border-collapse: collapse; margin: 0; padding: 0;">
     <tr style="border: none;">
       <td align="right" style="border: none; padding: 0 0 8px 0;">
         ${iconLinks.join('&nbsp;&nbsp;')}
