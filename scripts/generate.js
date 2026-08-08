@@ -406,7 +406,6 @@ async function main() {
       </g>
     </svg>`;
 
-    const hash = Date.now();
     fs.writeFileSync(path.join(outDir, 'contacts-row.svg'), contactsRowSvg);
 
     // Clean up temporary standalone icons and spacer

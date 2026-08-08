@@ -1,4 +1,4 @@
 <div align="left" style="line-height: 0;">
-  <img src="./assets/spacer.svg?v=1786196007302" width="656" height="40"><a href="https://anuragsterminalbay.vercel.app/" target="_blank" rel="noopener noreferrer"><img src="./assets/icon-website.svg?v=1786196007302" width="52" height="40"></a><a href="https://linkedin.com/in/4nur4gmishra" target="_blank" rel="noopener noreferrer"><img src="./assets/icon-linkedin.svg?v=1786196007302" width="52" height="40"></a><a href="mailto:anuragmishrasnag06082004@gmail.com" target="_blank" rel="noopener noreferrer"><img src="./assets/icon-gmail.svg?v=1786196007302" width="40" height="40"></a>
-  <img alt="Anurag Mishra Profile" src="./assets/profile-v2.svg?v=1786196007302">
+  <a href="https://anuragsterminalbay.vercel.app/" target="_blank" rel="noopener noreferrer"><img src="./assets/contacts-row.svg?v=1786196870822" width="800" alt="Contacts"></a>
+  <img alt="Anurag Mishra Profile" src="./assets/profile-v2.svg?v=1786196870822" width="800">
 </div>
