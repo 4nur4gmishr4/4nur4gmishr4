@@ -380,17 +380,15 @@ async function main() {
     fs.writeFileSync(path.join(outDir, 'profile-v2.svg'), merged);
 
     const hash = Date.now();
-
-    // Generate 3 individual 36x36 icon SVGs
-    // Using 36x36 medium size icons displayed inline next to each other inside a single 800px table cell
-    // This GUARANTEES all 3 icons sit on ONE single horizontal line on all laptops, iPhones, and Androids!
+    
+    // Generate 3 individual 38x38 icon SVGs (optimal medium-large size for desktop monitors & mobile touch targets)
     let iconLinks = [];
     DATA.contacts.forEach((c, idx) => {
       const pathData = getIconPath(c.slug);
       if (pathData) {
-        const singleIconSvg = `<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="36" height="36" rx="9" fill="${colors.primary}" />
-          <g transform="translate(8, 8) scale(0.833)">
+        const singleIconSvg = `<svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="38" height="38" rx="9" fill="${colors.primary}" />
+          <g transform="translate(9, 9) scale(0.833)">
             <path d="${pathData}" fill="#ffffff" />
           </g>
         </svg>`;
@@ -398,7 +396,7 @@ async function main() {
         fs.writeFileSync(path.join(outDir, `icon-${c.slug}.svg`), singleIconSvg);
         
         const linkUrl = c.link.startsWith('mailto:') ? c.link : (c.link.startsWith('http') ? c.link : `https://${c.link}`);
-        iconLinks.push(`<a href="${linkUrl}" target="_blank" rel="noopener noreferrer"><img src="./assets/icon-${c.slug}.svg?v=${hash}" width="36" height="36" align="top"></a>`);
+        iconLinks.push(`<a href="${linkUrl}" target="_blank" rel="noopener noreferrer"><img src="./assets/icon-${c.slug}.svg?v=${hash}" width="38" height="38" align="top" style="vertical-align: middle;"></a>`);
       }
     });
 
@@ -406,11 +404,11 @@ async function main() {
     const oldRow = path.join(outDir, 'contacts-row.svg');
     if (fs.existsSync(oldRow)) fs.unlinkSync(oldRow);
 
-    // Single horizontal row layout: 800px width container with icons right-aligned in ONE SINGLE line!
+    // Ultra-optimized 800px responsive HTML container with right padding (48px) matching the inner card margin of profile-v2.svg
     const readmeContent = `<div align="left">
-  <table width="800" border="0" cellspacing="0" cellpadding="0" style="width: 800px; max-width: 100%; border: none; border-collapse: collapse; margin: 0 0 8px 0; padding: 0;">
+  <table width="800" border="0" cellspacing="0" cellpadding="0" style="width: 800px; max-width: 100%; border: none; border-collapse: collapse; margin: 0 0 10px 0; padding: 0;">
     <tr style="border: none;">
-      <td align="right" valign="middle" style="border: none; padding: 0; white-space: nowrap;">
+      <td align="right" valign="middle" style="border: none; padding: 0 48px 0 0; white-space: nowrap;">
         ${iconLinks.join('&nbsp;&nbsp;')}
       </td>
     </tr>
@@ -419,7 +417,7 @@ async function main() {
 </div>`;
     
     fs.writeFileSync(path.join(__dirname, '..', 'README.md'), readmeContent);
-    console.log('Done! Individual clickable icons generated with dedicated links for each platform');
+    console.log('Done! Universal responsive contact icons generated for Desktop, iPhone, and Android');
   } catch (err) {
     console.error(err);
     process.exit(1);
