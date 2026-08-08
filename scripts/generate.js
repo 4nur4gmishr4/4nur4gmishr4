@@ -381,40 +381,47 @@ async function main() {
 
     const hash = Date.now();
 
-    // 1. Generate transparent spacer SVG (656x40) to push icons to x=656
-    const spacerSvg = `<svg width="656" height="40" viewBox="0 0 656 40" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>`;
-    fs.writeFileSync(path.join(outDir, 'spacer.svg'), spacerSvg);
+    // Generate standalone 800x44 SVG with clickable icons positioned flush right to x=800
+    // Width 800px ensures it scales down 1:1 on mobile screens alongside profile-v2.svg!
+    let contactsRowSvg = `<svg width="800" height="44" viewBox="0 0 800 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(656, 2)">`;
 
-    // 2. Generate 3 individual clickable icon SVGs with exact 12px gaps (52x40, 52x40, 40x40)
-    let iconHtmlList = [];
     DATA.contacts.forEach((c, idx) => {
       const pathData = getIconPath(c.slug);
       if (pathData) {
-        const isLast = idx === DATA.contacts.length - 1;
-        const totalW = isLast ? 40 : 52;
-        const iconSvg = `<svg width="${totalW}" height="40" viewBox="0 0 ${totalW} 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="40" height="40" rx="10" fill="${colors.primary}" />
-          <g transform="translate(10, 10) scale(0.833)">
-            <path d="${pathData}" fill="#ffffff" />
+        const xOffset = idx * (40 + 12);
+        contactsRowSvg += `
+        <a href="${c.link}" target="_blank" rel="noopener noreferrer">
+          <g transform="translate(${xOffset}, 0)">
+            <rect width="40" height="40" rx="10" fill="${colors.primary}" />
+            <g transform="translate(10, 10) scale(0.833)">
+              <path d="${pathData}" fill="#ffffff" />
+            </g>
           </g>
-        </svg>`;
-        
-        fs.writeFileSync(path.join(outDir, `icon-${c.slug}.svg`), iconSvg);
-        iconHtmlList.push(`<a href="${c.link}" target="_blank" rel="noopener noreferrer"><img src="./assets/icon-${c.slug}.svg?v=${hash}" width="${totalW}" height="40"></a>`);
+        </a>`;
       }
     });
 
-    // Clean up old contacts-row.svg if it exists
-    const oldRow = path.join(outDir, 'contacts-row.svg');
-    if (fs.existsSync(oldRow)) fs.unlinkSync(oldRow);
+    contactsRowSvg += `
+      </g>
+    </svg>`;
+
+    const hash = Date.now();
+    fs.writeFileSync(path.join(outDir, 'contacts-row.svg'), contactsRowSvg);
+
+    // Clean up temporary standalone icons and spacer
+    ['spacer.svg', 'icon-website.svg', 'icon-linkedin.svg', 'icon-gmail.svg'].forEach(f => {
+      const p = path.join(outDir, f);
+      if (fs.existsSync(p)) fs.unlinkSync(p);
+    });
 
     const readmeContent = `<div align="left" style="line-height: 0;">
-  <img src="./assets/spacer.svg?v=${hash}" width="656" height="40">${iconHtmlList.join('')}
-  <img alt="Anurag Mishra Profile" src="./assets/profile-v2.svg?v=${hash}">
+  <a href="https://anuragsterminalbay.vercel.app/" target="_blank" rel="noopener noreferrer"><img src="./assets/contacts-row.svg?v=${hash}" width="800" alt="Contacts"></a>
+  <img alt="Anurag Mishra Profile" src="./assets/profile-v2.svg?v=${hash}" width="800">
 </div>`;
     
     fs.writeFileSync(path.join(__dirname, '..', 'README.md'), readmeContent);
-    console.log('Done! 3 individual clickable icon SVGs generated and aligned flush right to x=800');
+    console.log('Done! Responsive 800px contacts-row.svg generated and aligned flush right for mobile & desktop');
   } catch (err) {
     console.error(err);
     process.exit(1);
