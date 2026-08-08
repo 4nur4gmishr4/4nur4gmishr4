@@ -1,0 +1,24 @@
+{
+  "name": "4nur4gmishr4",
+  "version": "1.0.0",
+  "description": "Dynamic GitHub profile README generated with SVGs",
+  "main": "index.js",
+  "scripts": {
+    "build": "node scripts/generate.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/4nur4gmishr4/4nur4gmishr4.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/4nur4gmishr4/4nur4gmishr4/issues"
+  },
+  "homepage": "https://github.com/4nur4gmishr4/4nur4gmishr4#readme",
+  "dependencies": {
+    "simple-icons": "^16.28.0"
+  }
+}
