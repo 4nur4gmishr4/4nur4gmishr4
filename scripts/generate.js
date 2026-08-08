@@ -25,7 +25,7 @@ const fonts = {
 };
 
 const DATA = {
-  hero: "Applied AI & Backend Engineer specializing in high-throughput microservices and autonomous LLM orchestration. Architect of developer productivity tools reaching 24,000+ cumulative downloads and zero-knowledge security systems supporting 1,500+ active users.",
+  hero: "Backend-focused fullstack & applied ai dev. Building cool stuff with LLMs & agents. Obsessed with clean architecture & shipping no-bug code to prod.",
   experience: {
     title: "Full-Stack Developer Intern",
     company: "Prominent Digitech",
